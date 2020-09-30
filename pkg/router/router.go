@@ -13,4 +13,5 @@ func InitRouter(router *gin.Engine) {
 	controller.RegisterUser(v1)
 	controller.RegisterPlugin(v1)
 
+	controller.RegisterWebSocket(v1)
 }

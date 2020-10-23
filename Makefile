@@ -15,4 +15,4 @@ lin:
 		-X 'github.com/general252/goempty/pkg/version.Version=${BUILD_VERSION}' " \
 		-o bin/goempty
 run:
-	./bin/goempty.exe -port=9999
+	./bin/goempty.exe

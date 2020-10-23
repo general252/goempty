@@ -6,11 +6,7 @@ import (
 	"time"
 )
 
-func RegisterWebSocket(router *gin.RouterGroup) {
-	router.GET("/ws/:TOKEN", ginWebsocketHandler(websocketConnHandle))
-}
-
-func websocketConnHandle(ws *websocket.Conn) {
+func WebsocketConnHandle(ws *websocket.Conn) {
 	defer func() {
 		_ = ws.Close()
 	}()
@@ -27,17 +23,6 @@ func websocketConnHandle(ws *websocket.Conn) {
 		})
 		if err != nil {
 			break
-		}
-	}
-}
-
-// websocket.Handler 转 gin HandlerFunc
-func ginWebsocketHandler(wsConnHandle websocket.Handler) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		if c.IsWebsocket() {
-			wsConnHandle.ServeHTTP(c.Writer, c.Request)
-		} else {
-			_, _ = c.Writer.WriteString("===not websocket request===")
 		}
 	}
 }

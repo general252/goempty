@@ -1,0 +1,9 @@
+basePath: /empty/v1
+info:
+  contact: {}
+  description: 项目描述
+  license: {}
+  title: 项目名称
+  version: 0.0.1
+paths: {}
+swagger: "2.0"

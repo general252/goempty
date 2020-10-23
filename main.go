@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/general252/goempty/docs"
 	"github.com/general252/goempty/pkg"
 )
 

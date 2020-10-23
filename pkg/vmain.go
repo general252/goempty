@@ -3,13 +3,12 @@ package pkg
 import (
 	"context"
 	"fmt"
-	"github.com/general252/goempty/pkg/db"
-	"github.com/general252/goempty/pkg/parseSwag"
+	"github.com/general252/goempty/pkg/config"
+	"github.com/general252/goempty/pkg/model"
 	"github.com/general252/goempty/pkg/router"
 	"github.com/general252/goempty/pkg/version"
 	"github.com/general252/gout/ulog"
 	"github.com/general252/gout/usafe"
-	"github.com/gin-gonic/gin"
 	"net"
 	"net/http"
 	"os"
@@ -18,27 +17,26 @@ import (
 )
 
 func VMain() {
-	// 整理swag api
-	parseSwag.ParseSwag()
-
 	// 显示版本信息
 	version.ShowVersionInfo()
 
 	// 初始化数据库
-	_ = db.InitDataBase()
+	if err := model.InitDataBase(config.JsonConfig.DB.ConnectionString()); err != nil {
+		ulog.Error("init database %v", err)
+		return
+	}
 
-	// 初始化redis
-
-	var r = gin.Default()
-	router.InitRouter(r)
-
-	var serverPort = 9999
+	// 监听端口
+	var serverPort = config.JsonConfig.HttpPort
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%v", serverPort))
 	if err != nil {
 		ulog.Error("listen %v fail %v", serverPort, err)
 		return
 	}
-	var httpServer = &http.Server{Handler: r}
+
+	var httpServer = &http.Server{
+		Handler: router.InitRouter(),
+	}
 
 	// 启动服务
 	var pool = usafe.NewPool(context.TODO())
